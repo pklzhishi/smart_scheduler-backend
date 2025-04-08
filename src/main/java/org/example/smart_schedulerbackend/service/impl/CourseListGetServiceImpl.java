@@ -8,7 +8,9 @@ import org.example.smart_schedulerbackend.model.entity.SchedulingTask;
 import org.example.smart_schedulerbackend.model.entity.SchedulingTaskFinal;
 import org.example.smart_schedulerbackend.service.CourseListGetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ public class CourseListGetServiceImpl implements CourseListGetService {
     private CourseListGetMapper courseListGetMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addSchedulingTask(SchedulingTaskDTO taskDTO) {
         SchedulingTask task = convertToSchedulingTask(taskDTO);
         // 调用 MyBatis-Plus 提供的通用插入方法
@@ -33,16 +36,21 @@ public class CourseListGetServiceImpl implements CourseListGetService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "attendanceRate", key = "#classSchoolDistrict + '_' + #classCompose + '_' + #courseNumber")
     public String getAttendanceRate(String classSchoolDistrict, String classCompose,String courseNumber) {
         return courseListGetMapper.getAttendanceRateByClassSchoolDistrictAndClassCompose(classSchoolDistrict, classCompose ,courseNumber);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateAttendanceRateByFields(String classSchoolDistrict, String classCompose, String courseNumber, String attendanceRate) {
         return courseListGetMapper.updateAttendanceRateByFields(classSchoolDistrict, classCompose, courseNumber, attendanceRate);
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "schedulingTaskDTO2", key = "#classroomName")
     public List<SchedulingTaskDTO2> getSchedulingTaskDTO2ByClassroomName(String classroomName) {
         return courseListGetMapper.getSchedulingTaskDTO2ByClassroomName(classroomName);
     }
@@ -62,6 +70,8 @@ public class CourseListGetServiceImpl implements CourseListGetService {
     }
 
     @Override
+    @Cacheable(value = "schedulingTaskByClassCompose", key = "#classCompose")
+    @Transactional(readOnly = true)
     public List<SchedulingTaskDTO3> getSchedulingTaskByClassCompose(String classCompose) {
         return courseListGetMapper.selectSchedulingTasksByClassCompose(classCompose);
     }

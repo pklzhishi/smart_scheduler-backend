@@ -1,9 +1,11 @@
 package org.example.smart_schedulerbackend.service.impl;
 
+import org.example.smart_schedulerbackend.exception.CustomException;
 import org.example.smart_schedulerbackend.mapper.UserMapper;
 import org.example.smart_schedulerbackend.model.entity.User;
 import org.example.smart_schedulerbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,13 +18,22 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     @Override
     public boolean register(User user){
         User user1 = userMapper.getUserById(user.getId());
         if(user1 != null)
         {
-            return false;
+            throw new CustomException("账号已存在！");
         }
+
+        // 加密用户密码
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
         user.setIsDeleted(0);

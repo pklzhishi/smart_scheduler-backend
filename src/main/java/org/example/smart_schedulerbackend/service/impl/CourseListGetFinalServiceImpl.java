@@ -6,7 +6,9 @@ import org.example.smart_schedulerbackend.mapper.CourseListGetMapper;
 import org.example.smart_schedulerbackend.model.entity.SchedulingTaskFinal;
 import org.example.smart_schedulerbackend.service.CourseListGetFinalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,8 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     private CourseListGetFinalMapper courseListGetFinalMapper;
 
     @Override
+    @Cacheable(value = "courseList", key = "#classSchoolDistrict + '_' + #classroomname + '_' + #timeWeek", cacheManager = "cacheManager", unless = "#result == null")
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getcourselist(String classSchoolDistrict, String classroomname, String timeWeek)
     {
         List<Map<String,Object>> resultList = new ArrayList<>();
@@ -69,6 +73,8 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Cacheable(value = "changeCourseList", key = "#classSchoolDistrict + '_' + #classroomname")
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getchangecourselist(String classSchoolDistrict, String classroomname)
     {
         List<Map<String,Object>> resultList = new ArrayList<>();
@@ -115,6 +121,8 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Cacheable(value = "teacherCourseList", key = "#teacherName + '_' + #timeWeek")
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getTeacherCourseList(String teacherName,String timeWeek)
     {
         List<Map<String,Object>> resultList = new ArrayList<>();
@@ -161,6 +169,8 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Cacheable(value = "changeTeacherCourseList", key = "#teacherName")
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getChangeTeacherCourseList(String teacherName)
     {
         List<Map<String,Object>> resultList = new ArrayList<>();
@@ -206,6 +216,8 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Cacheable(value = "classroomUtilization", key = "#classroomName + '_' + #timeWeek")
+    @Transactional(readOnly = true)
     public Map<String,Long> getClassroomUtilization(String classroomName,Integer timeWeek)
     {
         Map<String,Object> map = new HashMap<>();
@@ -217,6 +229,7 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getMonthViewForStudent(String times,String classSchoolDistrict, String className)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -269,6 +282,7 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getMonthViewForTeacher(String times,String teacherName)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -318,6 +332,7 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<String,Object> detectConflicts(List<Map<String,Object>> list)
     {
         int size = list.size();
@@ -402,6 +417,8 @@ public class CourseListGetFinalServiceImpl implements CourseListGetFinalService 
     }
 
     @Override
+    @Cacheable(value = "attendenceRate", key = "#className")
+    @Transactional(readOnly = true)
     public List<Map<String,Object>> getAttendenceRate(String className)
     {
         return courseListGetFinalMapper.getAttendenceRate(className);
