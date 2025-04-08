@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.ClassroomBookingMapper">
+    <!-- 定义字段映射 -->
+    <resultMap id="ClassroomBookingResultMap" type="org.example.smart_schedulerbackend.model.entity.ClassroomBooking">
+        <id property="id" column="id"/>
+        <result property="classroomName" column="classroom_name"/>
+        <result property="schoolDistricts" column="school_districts"/>
+        <result property="timeWeek" column="time_week"/>
+        <result property="time" column="time"/>
+        <result property="isBooking" column="is_booking"/>
+    </resultMap>
+
+    <insert id="bookingClassroom" parameterType="java.util.Map">
+        INSERT INTO classroom_booking(classroom_name, school_districts, time_week, time, is_booking)
+        VALUES (#{classroomName}, #{schoolDistricts}, #{timeWeek}, #{time}, 'Yes')
+    </insert>
+
+    <update id="cancelBooking" parameterType="java.util.Map">
+        UPDATE classroom_booking
+        SET is_booking = 'No'
+        WHERE classroom_name = #{classroomName} AND school_districts = #{schoolDistricts} AND time_week = #{timeWeek} AND time = #{time} AND is_booking = 'Yes'
+    </update>
+</mapper>

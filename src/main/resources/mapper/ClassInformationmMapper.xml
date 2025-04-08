@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.ClassInformationmMapper">
+    <resultMap id="ClassInformationMap" type="org.example.smart_schedulerbackend.model.entity.ClassInformation">
+        <id property="classNumber" column="Class_number"/>
+        <result property="className" column="Class_name"/>
+        <result property="classAbbreviation" column="Class_abbreviation"/>
+        <result property="academic" column="Academic"/>
+        <result property="cultivationLevel" column="Cultivation_level"/>
+        <result property="classCategory" column="Class_category"/>
+        <result property="counsellor" column="Counsellor"/>
+        <result property="headteacher" column="Headteacher"/>
+        <result property="monitor" column="Monitor"/>
+        <result property="bansuke" column="Bansuke"/>
+        <result property="graduationYear" column="Graduation_year"/>
+        <result property="graduationOrNot" column="Graduation_or_not"/>
+        <result property="classSize" column="Class_size"/>
+        <result property="genderRatio" column="gender_Ratio"/>
+        <result property="maximumClassSize" column="Maximum_class_size"/>
+        <result property="admissionYear" column="Admission_year"/>
+        <result property="faculties" column="Faculties"/>
+        <result property="professionalNumber" column="Professional_number"/>
+        <result property="major" column="Major"/>
+        <result property="professionalDirection" column="Professional_direction"/>
+        <result property="schoolDistricts" column="School_districts"/>
+        <result property="fixedClassroom" column="Fixed_classroom"/>
+        <result property="remark" column="Remark"/>
+        <result property="headteacherPhoneNumber" column="Headteacher_phone_number"/>
+        <result property="headteacher2" column="Headteacher2"/>
+        <result property="finalAcademicYear" column="Final_academic_year"/>
+        <result property="expandTheEnrollment" column="Expand_the_enrollment"/>
+        <result property="academicTutor" column="Academic_tutor"/>
+        <result property="classSchedulingType" column="Class_scheduling_type"/>
+        <result property="classSchedulingTime" column="Class_scheduling_time"/>
+        <result property="isDelete" column="Is_delete"/>
+    </resultMap>
+
+    <update id="updateScheduleType" parameterType="java.util.Map">
+        UPDATE class_information
+        SET Class_scheduling_type = #{classSchedulingType},Class_scheduling_time = #{classSchedulingTime},Is_delete = #{isDelete}
+        WHERE Class_name = #{classname}
+    </update>
+
+    <select id="findClass" parameterType="String" resultMap="ClassInformationMap">
+        SELECT * FROM class_information WHERE Class_name LIKE concat('%',#{classname},'%')
+    </select>
+
+    <select id="getScheduleHistory" resultMap="ClassInformationMap">
+        SELECT * FROM class_information WHERE (Class_scheduling_type = 1 OR Class_scheduling_type = 2) AND Is_delete = 0
+    </select>
+
+    <select id="searchScheduleHistory" parameterType="String" resultMap="ClassInformationMap">
+        SELECT * FROM class_information WHERE Class_name LIKE concat('%',#{classname},'%') AND (Class_scheduling_type = 1 OR Class_scheduling_type = 2) AND Is_delete = 0
+    </select>
+
+    <update id="deleteScheduleHistory" parameterType="String">
+        UPDATE class_information
+        SET Is_delete = 1
+        WHERE Class_name = #{classname} AND Is_delete = 0
+    </update>
+
+    <select id="getAllClassInformation" parameterType="java.util.Map" resultMap="ClassInformationMap">
+        SELECT * FROM class_information WHERE School_districts = #{schoolDistricts} AND Major = #{major}
+    </select>
+
+    <select id="countClassInformation" parameterType="java.util.Map" resultType="long">
+        SELECT COUNT(*) FROM class_information WHERE school_districts = #{schoolDistricts} AND Major = #{major}
+    </select>
+
+    <select id="countClass" resultType="Long">
+        SELECT COUNT(*) FROM class_information
+    </select>
+
+    <select id="countSchedulingByAi" resultType="Long">
+        SELECT COUNT(DISTINCT Class_compose) FROM scheduling_task_final
+    </select>
+
+    <select id="countSchedulingByHand" resultType="Long">
+        SELECT COUNT(*) FROM class_information WHERE Class_scheduling_type = '1'
+    </select>
+
+    <select id="countSchedulingExport" resultType="Long">
+        SELECT COUNT(*) FROM class_information WHERE Class_scheduling_type = '2'
+    </select>
+</mapper>

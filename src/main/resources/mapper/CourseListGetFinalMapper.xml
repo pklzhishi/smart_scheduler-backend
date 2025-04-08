@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.CourseListGetFinalMapper">
+    <resultMap id="CourseListGetFinalResultMap" type="org.example.smart_schedulerbackend.model.entity.SchedulingTaskFinal">
+        <result property="yearSemester" column="year_semester"/>
+        <result property="time" column="time"/>
+        <result property="courseNumber" column="course_number"/>
+        <result property="courseName" column="course_name"/>
+        <result property="teacherNumber" column="teacher_number"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="classCompose" column="class_compose"/>
+        <result property="credits" column="credits"/>
+        <result property="hourType" column="hour_type"/>
+        <result property="commencementHour" column="commencement_hour"/>
+        <result property="schedulingHour" column="scheduling_hour"/>
+        <result property="totalHour" column="total_hour"/>
+        <result property="schedulingPriority" column="scheduling_priority"/>
+        <result property="classPeopleNumber" column="class_people_number"/>
+        <result property="classSchoolDistrict" column="class_school_district"/>
+        <result property="classWeeksHours" column="class_weeks_hours"/>
+        <result property="rowsNumber" column="rows_number"/>
+        <result property="classroomTypeAssigned" column="classroom_type_assigned"/>
+        <result property="classroomAssigned" column="classroom_assigned"/>
+        <result property="classroomName" column="classroom_name"/>
+        <result property="attendanceRate" column="Attendance_rate"/>
+    </resultMap>
+
+    <select id="getCourseList" parameterType="java.util.Map" resultMap="CourseListGetFinalResultMap">
+        SELECT * FROM scheduling_task_final WHERE class_school_district = #{classSchoolDistrict} AND class_compose LIKE concat('%',#{classCompose},'%') AND #{timeWeek} >= CAST(SUBSTRING_INDEX(Class_weeks_hours, '-', 1) AS SIGNED)  AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(Class_weeks_hours, ':', 1), '-', -1) AS SIGNED) >= #{timeWeek}
+    </select>
+
+    <select id="getChangeCourseList" parameterType="java.util.Map" resultMap="CourseListGetFinalResultMap">
+        SELECT * FROM scheduling_task_final WHERE class_school_district = #{classSchoolDistrict} AND class_compose LIKE concat('%',#{classCompose},'%')
+    </select>
+
+    <select id="getChangeTeacherCourseList" parameterType="java.util.Map" resultMap="CourseListGetFinalResultMap">
+        SELECT * FROM scheduling_task_final WHERE teacher_name LIKE concat('%',#{teacherName},'%')
+    </select>
+
+    <select id="getTeacherCourseList" parameterType="java.util.Map" resultMap="CourseListGetFinalResultMap">
+        SELECT * FROM scheduling_task_final WHERE teacher_name LIKE concat('%',#{teacherName},'%') AND #{timeWeek} >= CAST(SUBSTRING_INDEX(Class_weeks_hours, '-', 1) AS SIGNED)  AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(Class_weeks_hours, ':', 1), '-', -1) AS SIGNED) >= #{timeWeek}
+    </select>
+
+    <select id="getClassroomUtilization" parameterType="java.util.Map" resultType="long">
+        SELECT COUNT(*) FROM scheduling_task_final WHERE classroom_name = #{classroomName} AND #{timeWeek} >= CAST(SUBSTRING_INDEX(Class_weeks_hours, '-', 1) AS SIGNED)  AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(Class_weeks_hours, ':', 1), '-', -1) AS SIGNED) >= #{timeWeek}
+    </select>
+
+    <select id="detectConflictsByTeacher" parameterType="java.util.Map">
+        SELECT * FROM scheduling_task_final WHERE time = #{time} AND Teacher_name = #{teacherName} AND classroom_name != #{classroomName}
+    </select>
+
+    <select id="detectConflictsByClass" parameterType="java.util.Map">
+        SELECT * FROM scheduling_task_final WHERE time = #{time} AND Class_compose = #{classCompose} AND classroom_name != #{classroomName}
+    </select>
+
+    <delete id="deleteClassSchedule" parameterType="String">
+        DELETE FROM scheduling_task_final WHERE Class_compose = #{value}
+    </delete>
+
+    <select id="getAttendenceRate" parameterType="String">
+        SELECT course_name,class_people_number,Attendance_rate FROM scheduling_task_final WHERE class_compose = #{value}
+    </select>
+
+    <insert id="insertClassSchedule" parameterType="java.util.Map">
+        INSERT INTO scheduling_task_final (
+            year_semester,
+            time,
+            course_number,
+            course_name,
+            teacher_number,
+            teacher_name,
+            class_compose,
+            credits,
+            hour_type,
+            commencement_hour,
+            scheduling_hour,
+            total_hour,
+            scheduling_priority,
+            class_people_number,
+            class_school_district,
+            class_weeks_hours,
+            rows_number,
+            classroom_type_assigned,
+            classroom_assigned,
+            classroom_name
+        ) VALUES (
+        #{yearSemester},
+        #{time},
+        #{courseNumber},
+        #{courseName},
+        #{teacherNumber},
+        #{teacherName},
+        #{classCompose},
+        #{credits},
+        #{hourType},
+        #{commencementHour},
+        #{schedulingHour},
+        #{totalHour},
+        #{schedulingPriority},
+        #{classPeopleNumber},
+        #{classSchoolDistrict},
+        #{classWeeksHours},
+        #{rowsNumber},
+        #{classroomTypeAssigned},
+        #{classroomAssigned},
+        #{classroomName}
+        )
+    </insert>
+</mapper>

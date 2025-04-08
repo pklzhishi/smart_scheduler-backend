@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.ProfessionalDataMapper">
+    <resultMap id="ProfessionalDataMap" type="org.example.smart_schedulerbackend.model.entity.ProfessionalData">
+        <id property="professionalNumber" column="professional_number"/>
+        <result property="professionAbbreviation" column="profession_abbreviation"/>
+        <result property="academic" column="academic"/>
+        <result property="englishName" column="english_name"/>
+        <result property="startUpStatus" column="start_up_status"/>
+        <result property="affiliation" column="affiliation"/>
+        <result property="professionalName" column="professional_name"/>
+        <result property="cultivationLevel" column="cultivation_level"/>
+    </resultMap>
+
+    <select id="getAllProfessionalData" parameterType="String" resultMap="ProfessionalDataMap">
+        SELECT * FROM professional_data
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+server:
+  port: 8080 # 设置应用运行的端口号
+
+# 其他自定义配置项
+app:
+  name: Smart Scheduler Backend
+  version: 1.0.0
+
+# 数据库连接配置
+spring:
+  datasource:
+    url: jdbc:mysql://115.29.241.234:3306/ai_schedulerdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: "@84986730Pkl"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: org.example.smart_schedulerbackend.model.entity

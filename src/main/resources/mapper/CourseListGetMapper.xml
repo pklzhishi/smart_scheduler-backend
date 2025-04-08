@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.CourseListGetMapper">
+    <resultMap id="CourseListGetResultMap" type="org.example.smart_schedulerbackend.model.entity.SchedulingTask">
+        <id property="classId" column="class_id"/>
+        <result property="yearSemester" column="year_semester"/>
+        <result property="courseNumber" column="course_number"/>
+        <result property="courseName" column="course_name"/>
+        <result property="teacherNumber" column="teacher_number"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="classCompose" column="class_compose"/>
+        <result property="courseDescription" column="course_description"/>
+        <result property="credits" column="credits"/>
+        <result property="classroomName" column="classroom_name"/>
+        <result property="hourType" column="hour_type"/>
+        <result property="commencementHour" column="commencement_hour"/>
+        <result property="schedulingHour" column="scheduling_hour"/>
+        <result property="totalHour" column="total_hour"/>
+        <result property="schedulingPriority" column="scheduling_priority"/>
+        <result property="classPeopleNumber" column="class_people_number"/>
+        <result property="courseNature" column="course_nature"/>
+        <result property="classSchoolDistrict" column="class_school_district"/>
+        <result property="externalType" column="external_type"/>
+        <result property="classDepartmentName" column="class_department_name"/>
+        <result property="classWeeksHours" column="class_weeks_hours"/>
+        <result property="rowsNumber" column="rows_number"/>
+        <result property="classroomTypeAssigned" column="classroom_type_assigned"/>
+        <result property="classroomAssigned" column="classroom_assigned"/>
+        <result property="departmentAssigned" column="department_assigned"/>
+        <result property="timeAssigned" column="time_assigned"/>
+    </resultMap>
+
+
+</mapper>

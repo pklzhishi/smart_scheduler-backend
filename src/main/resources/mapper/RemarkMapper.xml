@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.RemarkMapper">
+    <resultMap id="RemarkMap" type="org.example.smart_schedulerbackend.model.entity.Remark">
+        <id property="id" column="id"/>
+        <result property="yearSemester" column="Year_semester"/>
+        <result property="courseNumber" column="Course_number"/>
+        <result property="className" column="Class_name"/>
+        <result property="weeks" column="weeks"/>
+        <result property="days" column="days"/>
+        <result property="times" column="times"/>
+        <result property="remarkInformation" column="remark_information"/>
+    </resultMap>
+
+    <insert id="insertRemark" parameterType="org.example.smart_schedulerbackend.model.entity.Remark">
+        INSERT INTO remark(Year_semester,Course_number,Class_name,weeks,days,times,remark_information)
+        VALUES(#{yearSemester},#{courseNumber},#{className},#{weeks},#{days},#{times},#{remarkInformation})
+    </insert>
+
+    <select id="getRemark" parameterType="org.example.smart_schedulerbackend.model.entity.Remark" resultMap="RemarkMap">
+        SELECT * FROM remark WHERE Year_semester = #{yearSemester} AND Course_number = #{courseNumber} AND Class_name = #{className} AND weeks = #{weeks} AND days = #{days} AND times = #{times}
+    </select>
+</mapper>

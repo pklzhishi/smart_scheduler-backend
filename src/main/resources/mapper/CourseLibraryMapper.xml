@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.CourseLibraryMapper">
+    <!-- 定义字段映射 -->
+    <resultMap id="CourseLibraryResultMap" type="org.example.smart_schedulerbackend.model.entity.CourseLibrary">
+        <id property="courseNumber" column="course_number"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseCategories" column="Course_Categories"/>
+        <result property="courseProperties" column="Course_Properties"/>
+        <result property="courseType" column="Course_type"/>
+        <result property="courseNature" column="Course_nature"/>
+        <result property="englishName" column="English_name"/>
+        <result property="department" column="Department"/>
+        <result property="enabledStatus" column="Enabled_status"/>
+        <result property="creditHours" column="Credit_hours"/>
+        <result property="theoreticalHours" column="Theoretical_hours"/>
+        <result property="experimentalHours" column="Experimental_hours"/>
+        <result property="computerBasedHours" column="Computer_based_hours"/>
+        <result property="practicalHours" column="Practical_hours"/>
+        <result property="otherHours" column="Other_hours"/>
+        <result property="credits" column="Credits"/>
+        <result property="weeklyHours" column="Weekly_hours"/>
+        <result property="purelyPractical" column="Purely_practical"/>
+    </resultMap>
+
+    <select id="getAllCourses" resultType="org.example.smart_schedulerbackend.model.entity.CourseLibrary">
+        SELECT * FROM course_library
+    </select>
+
+    <select id="getCourseByNumber" resultType="org.example.smart_schedulerbackend.model.entity.CourseLibrary">
+        SELECT * FROM course_library WHERE course_number = #{courseNumber}
+    </select>
+
+    <insert id="insertCourse" parameterType="org.example.smart_schedulerbackend.model.entity.CourseLibrary">
+        INSERT INTO course_library (course_number, course_name, course_categories, course_properties, course_type, course_nature, english_name, department, enabled_status, credit_hours, theoretical_hours, experimental_hours, computer_based_hours, practical_hours, other_hours, credits, weekly_hours, purely_practical)
+        VALUES (#{courseNumber}, #{courseName}, #{courseCategories}, #{courseProperties}, #{courseType}, #{courseNature}, #{englishName}, #{department}, #{enabledStatus}, #{creditHours}, #{theoreticalHours}, #{experimentalHours}, #{computerBasedHours}, #{practicalHours}, #{otherHours}, #{credits}, #{weeklyHours}, #{purelyPractical})
+    </insert>
+
+    <update id="updateCourse" parameterType="org.example.smart_schedulerbackend.model.entity.CourseLibrary">
+        UPDATE course_library
+        SET course_name = #{courseName}, course_categories = #{courseCategories}, course_properties = #{courseProperties}, course_type = #{courseType}, course_nature = #{courseNature}, english_name = #{englishName}, department = #{department}, enabled_status = #{enabledStatus}, credit_hours = #{creditHours}, theoretical_hours = #{theoreticalHours}, experimental_hours = #{experimentalHours}, computer_based_hours = #{computerBasedHours}, practical_hours = #{practicalHours}, other_hours = #{otherHours}, credits = #{credits}, weekly_hours = #{weeklyHours}, purely_practical = #{purelyPractical}
+        WHERE course_number = #{courseNumber}
+    </update>
+
+    <delete id="deleteCourse" parameterType="String">
+        DELETE FROM course_library WHERE course_number = #{courseNumber}
+    </delete>
+
+    <select id="getAllCourseInformation" parameterType="java.util.Map" resultMap="CourseLibraryResultMap">
+        SELECT * FROM course_library WHERE Department = #{department} AND Course_Properties = #{courseProperties}
+    </select>
+
+    <select id="getAllCourseProperties" resultMap="CourseLibraryResultMap">
+        SELECT DISTINCT Course_Properties FROM course_library
+    </select>
+
+    <select id="countCourseInformation" parameterType="java.util.Map" resultType="long">
+        SELECT COUNT(*) FROM course_library WHERE Department = #{department} AND Course_Properties = #{courseProperties}
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.smart_schedulerbackend.mapper.FeedbackMapper">
+    <resultMap id="FeedbackMap" type="org.example.smart_schedulerbackend.model.entity.Feedback">
+        <id property="serialNumber" column="serial_number"/>
+        <result property="id" column="id"/>
+        <result property="problem" column="problem"/>
+        <result property="advice" column="advice"/>
+        <result property="telephoneNumber" column="telephone_number"/>
+        <result property="submissionTime" column="submission_time"/>
+    </resultMap>
+
+    <insert id="ProblemAndAdvice" parameterType="org.example.smart_schedulerbackend.model.entity.Feedback">
+        INSERT INTO feedback(id,problem,advice,telephone_number,submission_time)
+        VALUES(#{id},#{problem},#{advice},#{telephoneNumber},#{submissionTime})
+    </insert>
+
+    <select id="getAllFeedBack">
+        SELECT * FROM feedback
+    </select>
+</mapper>
